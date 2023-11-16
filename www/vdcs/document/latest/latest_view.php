@@ -58,7 +58,8 @@ var vm = new Vue({
         maxSeq: 0,
         isDownError: false,
         isStaff: sessionStorage.getItem("isStaff"),
-        externalRight: 'Y'
+        externalRight: 'Y',
+        filterDownloadList: []
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -694,6 +695,43 @@ var vm = new Vue({
             .catch(function(error){
                 console.log(error);
             });
+        },
+        // 리스트 다운로드
+        listDocDownload() {
+            var jno = this.jno;
+            $("#modalLoading").modal('show');
+
+            if(this.isRebrowsing) {
+                $.each(this.searchList, function(i, condition) {
+                    searchCondition += "&" + i + "=" + condition;
+                });
+            } else {
+                searchCondition = "&" + this.researchOption + "=" + this.researchSave;
+            }
+            searchCondition += "&sd_type=" + this.sdOption + "&sd_start_date=" + this.sd_start_date + "&sd_end_date=" + this.sd_end_date;
+            searchCondition += "&so_dc=" + this.so_dc + "&so_rc=" + this.so_rc;
+
+            var data = this;
+            var url = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&mode=latest&jno='+ jno + searchCondition;
+            axios.get(url)
+            .then(function(response) {
+                var latest = response["data"];
+                if(latest["Message"] == "Success") {
+                    var filterDownloadList = latest["Value"];
+                    
+                    // 체크박스 리스트
+                    $.each(filterDownloadList, function(i, info) {
+                        data.filterDownloadList.push(info["doc_no"]);
+                    });
+
+                    var selDoc = data.filterDownloadList.join(",")
+
+                    location.href = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_LE_DOWNLOAD&jno='+ data.jno +'&doc_no=' + selDoc;
+                }
+            })
+            .finally(function () {
+                $("#modalLoading").modal('hide');
+            });
         }
     }
 })
@@ -706,13 +744,16 @@ var vm = new Vue({
     </div>
     <div class="col-md text-right">
         <span v-show="jno">
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드" v-show="externalRight == 'Y'">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-check" style="font-size:large"></i> 선택 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드" v-show="externalRight == 'Y'">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="listDocDownload" :disabled="latestList.length == 0" title="리스트 다운로드" v-show="0">
+                <i class="fa-solid fa-list-ul" style="font-size:large"></i> 리스트 다운로드
+            </button>
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-floppy-disk" style="font-size:large"></i> 전체 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:130px;" @click="exportLatestExcel" :disabled="latestList.length == 0" title="목록 내보내기" v-show="externalRight == 'Y'">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="exportLatestExcel" :disabled="latestList.length == 0" title="목록 내보내기" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
             </button>
         </span>
