@@ -174,11 +174,10 @@ else if($requestVdcsModelType == RequestVdcsModelType::DocReplyDownload)
         */
         $rec = $db->Record;
         //$Fun->print_r($rec);
-		$strRuleBaseFileName = "{$db->f("doc_num")}_r{$db->f("doc_rev_num")} {$db->f("doc_title")}【RE-{$db->f("doc_status_nick")}】.pdf";
-		//$strRuleBaseFileName = $db->f("deploy_file_name");
+
         $DownloadFileInfo = array(
             "file_check" => $db->f("deploy_file_check"),
-            "file_name" => $strRuleBaseFileName, //$db->f("deploy_file_name"),
+            "file_name" => $db->f("deploy_file_name"),
             "file_save" => $db->f("deploy_file_save"),
             "file_path" => $db->f("deploy_file_path"),
             "file_size" => $db->f("deploy_file_size"),

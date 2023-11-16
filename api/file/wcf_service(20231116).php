@@ -15,10 +15,10 @@ $TempFullName = null;
 
 if($isArchiveMultiFileToZip == true)
 {
-    $saveLocalTempDirPath = "F:\\AppStorageFiles";
+    $saveRemoteTempDirPath = "AppStorageFiles\\Temp\\VDCS\\Latest";
     if($isArchiveMultiFileToZipUseWcf == true)
     {
-        $saveLocalTempDirPath .= "\\CreateDirectoryWeb";
+        $saveRemoteTempDirPath .= "\\CreateDirectoryWeb";
     }
     $wsdl = _WSDL_TRANSFERWEB_URL_;
     $client = new SoapClient($wsdl, array(
@@ -30,9 +30,10 @@ if($isArchiveMultiFileToZip == true)
     ));
 
     //임시 폴더 생성
-    $Fun->mk_dir($saveLocalTempDirPath);
-    
-    $isDir_CreateArchiveWeb = is_dir($saveLocalTempDirPath);
+    $retvalCreateDirectoryWeb = $client->CreateDirectoryWeb(array(
+        'strCreateDirectory' => $saveRemoteTempDirPath
+    ));
+    $isDir_CreateArchiveWeb = $retvalCreateDirectoryWeb->CreateDirectoryWebResult->Result == "True" ? true : false;
     
     //$Fun->print_r($DownloadFileListArr);
     //exit;
@@ -40,11 +41,9 @@ if($isArchiveMultiFileToZip == true)
     if($isDir_CreateArchiveWeb == true)
     {
         $filesForCompression = array();
-        $namesForCompression = array();
         foreach ($DownloadFileListArr as $_row => $_val) 
         {
             $filesForCompression[] = $_val["file_path"] . "\\" . $_val["file_save"];
-            $namesForCompression[] = $_val["file_name"];
             //$Fun->print_r($filesMD5ChecksumValue);
             //exit;
         }
@@ -55,84 +54,34 @@ if($isArchiveMultiFileToZip == true)
         //echo $filesMD5ChecksumValue;
         //$saveZipFileName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "T" . date("His") . "_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . "_VDCS_Latest_{$filesMD5ChecksumValue}.zip";
         //$TempFullName = $saveRemoteTempDirPath . "\\" . str_pad($jno, 5, "0",STR_PAD_LEFT) . "_VDCS_Latest_{$filesMD5ChecksumValue}.zip";
-        if(isset($job_no) && $job_no)
-        {
-            $TempFullName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "_VDCS_Latest_Selected_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . "_" . $job_no .".zip";
-        }
-        else
-        {
-            $TempFullName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "_VDCS_Latest_Selected_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . ".zip";
-        }
+        $TempFullName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "_VDCS_Latest_Selected_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . ".zip";
         //echo $TempFullName;
         //exit;
+        $retvalCheckFileExistWeb = $client->CheckFileExistWeb(array(
+                        'strFileName' => $TempFullName,
+                    ));
         
-        $isFileExist = is_file($TempFullName);
+        $isFileExist = $retvalCheckFileExistWeb->CheckFileExistWebResult->Result == "True" ? true : false;
         //if($isFileExist == false)
         {
             if($isArchiveMultiFileToZipUseWcf == true)
             {
-                $wsdl = 'http://file.htenc.co.kr/transferweb/Service1.svc?singleWsdl';
-                $client = new SoapClient($wsdl, array(
-                        'trace' => true,
-                        'encoding'=>'UTF-8',
-                        'exceptions'=>true,
-                        'cache_wsdl'=>WSDL_CACHE_NONE,
-                        'soap_version' => SOAP_1_1
-                ));
-                //$FileFullName = "eula.1028.txt";
-                //echo $FileFullName;
-                //exit;
-                
-                //$saveLocalTempRootPath = $saveLocalTempDirPath . "\\" . basename($TempFullName) . "■". date("Ymd") . "T" . date("His");// . "■" .  $filesMD5ChecksumValue;
-                $saveLocalTempRootPath = $saveLocalTempDirPath . "\\" . date("Y-m-d") . "\\" . date("Ymd") . "T" . date("His") . "■" . str_replace(".zip", "", basename($TempFullName));
-                $saveLocalTempZipFullName =  $saveLocalTempRootPath . "\\" . basename($TempFullName);
-                
-                
-                $idx = 0;
-                foreach ($filesForCompression as $remoteFullName)
+                $retvalCreateArchiveWeb = $client->CreateArchiveWeb(array(
+                        'strSaveZipFileName' => $TempFullName,
+                        'strFilesForCompression' => $filesForCompression
+                    ));
+                $strErrorMessage = $retvalCreateArchiveWeb->CreateArchiveWebResult->ErrorMessage;
+                if($strErrorMessage)
                 {
-                    $retvalDownloadFileWeb = $client->DownloadFileWeb(array('strFileName' => $remoteFullName));
-                    //echo $retvalDownloadFileWeb->DownloadFileWebResult->ErrorMessage;
-                    $contents = base64_decode($retvalDownloadFileWeb->DownloadFileWebResult->FileBinary);
-                    //$saveLocalTempDirPath
-                    $saveFileName = $namesForCompression[$idx];
-                    $arrFileName = explode("\\", $saveFileName);
-                    $strSubDir = "";
-                    if(isset($arrFileName) && is_array($arrFileName) && count($arrFileName) > 1)
-                    {
-                        $strSubDir = $arrFileName[0];
-                        $saveLocalTempWorkPath = $saveLocalTempRootPath . "\\" . $strSubDir;
-                        //echo $saveTempFullName;
-                        //exit;
-                    }
-                    else 
-                    {
-                        $saveLocalTempWorkPath = $saveLocalTempRootPath;
-                    }
-                    $Fun->mk_dir($saveLocalTempWorkPath);
-                    
-                    $saveTempFullName = $saveLocalTempWorkPath . "\\" . basename($saveFileName);
-                    $myfile = fopen($saveTempFullName, "w") or die("Unable to open file!");
-                    fwrite($myfile, $contents);
-                    fclose($myfile);
-                    
-                    $idx++;
+                    echo $strErrorMessage;
+                    exit;
                 }
-                $za = new ZipArchive;
-                $za->open($saveLocalTempZipFullName,ZipArchive::CREATE|ZipArchive::OVERWRITE);
-                folderToZip($saveLocalTempRootPath, $za);
-                $za->close();
+                $TempFullName = $retvalCreateArchiveWeb->CreateArchiveWebResult->Result;
                 
-                header('Content-Type: application/zip');
-                header('Content-disposition: attachment; filename='.basename($saveLocalTempZipFullName));
-                header('Content-Length: ' . filesize($saveLocalTempZipFullName));
-                readfile($saveLocalTempZipFullName);
-                //sleep(1);
-                @unlink($saveLocalTempZipFullName);
-                deleteDir($saveLocalTempRootPath);
-                @rmdir($saveLocalTempRootPath);
-                //die();
-                exit;
+                $retvalCheckFileExistWeb = $client->CheckFileExistWeb(array(
+                            'strFileName' => $TempFullName,
+                        ));
+                $isFileExist = $retvalCheckFileExistWeb->CheckFileExistWebResult->Result == "True" ? true : false;
             }   
             else
             {
@@ -222,12 +171,6 @@ if($contents)
 {
     if( ($isDirect == true || $isWebView == true) && $ext != ".zip")
     {
-		$SaveNameArry = explode("\\", $SaveName);
-		if($SaveNameArry != null && is_array($SaveNameArry) && count($SaveNameArry) > 1)
-		{
-			$SaveName = $SaveNameArry[count($SaveNameArry) - 1];
-		}
-		
         $mimeType = $DownloadFileInfo["file_type"];
         if(!$mimeType)
         {
@@ -342,37 +285,4 @@ if($contents)
         }
     }
     exit;
-}
-
-function folderToZip($folder, &$zipFile, $subfolder = null) {
-    if ($zipFile == null) {
-        // no resource given, exit
-        return false;
-    }
-    // we check if $folder has a slash at its end, if not, we append one
-    $folder .= end(str_split($folder)) == "/" ? "" : "/";
-    $subfolder .= end(str_split($subfolder)) == "/" ? "" : "/";
-    // we start by going through all files in $folder
-    $handle = opendir($folder);
-    while ($f = readdir($handle)) {
-        if ($f != "." && $f != "..") {
-            if (is_file($folder . $f)) {
-                // if we find a file, store it
-                // if we have a subfolder, store it there
-                if ($subfolder != null)
-                    $zipFile->addFile($folder . $f, $subfolder . $f);
-                else
-                    $zipFile->addFile($folder . $f);
-            } elseif (is_dir($folder . $f)) {
-                // if we find a folder, create a folder in the zip
-                $zipFile->addEmptyDir($f);
-                // and call the function again
-                folderToZip($folder . $f, $zipFile, $f);
-            }
-        }
-    }
-}
-
-function deleteDir($path) {
-    return is_file($path) ? @unlink($path) : array_map(__FUNCTION__, glob($path.'/*')) == @rmdir($path);
 }

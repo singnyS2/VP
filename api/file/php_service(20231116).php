@@ -222,12 +222,6 @@ if($contents)
 {
     if( ($isDirect == true || $isWebView == true) && $ext != ".zip")
     {
-		$SaveNameArry = explode("\\", $SaveName);
-		if($SaveNameArry != null && is_array($SaveNameArry) && count($SaveNameArry) > 1)
-		{
-			$SaveName = $SaveNameArry[count($SaveNameArry) - 1];
-		}
-		
         $mimeType = $DownloadFileInfo["file_type"];
         if(!$mimeType)
         {
