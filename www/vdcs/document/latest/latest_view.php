@@ -699,6 +699,7 @@ var vm = new Vue({
         // 리스트 다운로드
         listDocDownload() {
             var jno = this.jno;
+            var searchCondition = '';
             $("#modalLoading").modal('show');
 
             if(this.isRebrowsing) {
@@ -724,13 +725,20 @@ var vm = new Vue({
                         data.filterDownloadList.push(info["doc_no"]);
                     });
 
-                    var selDoc = data.filterDownloadList.join(",")
+                    var selDoc = data.filterDownloadList.join(",");
+                    var url = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_LE_DOWNLOAD&jno='+ data.jno +'&doc_no=' + selDoc;
+                    if(url.length <= 2083) {
+                        data.axiosDownload('listDownload', url, "GET");
+                    } else {
+                        $("#modalLoading").modal('hide');
+                        $("#alertModal .modal-body").html("다운받고자 하는 문서의 양이 많습니다.<br/>전체 다운로드를 사용하거나 검색조건을 더 추가하세요.");
 
-                    location.href = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_LE_DOWNLOAD&jno='+ data.jno +'&doc_no=' + selDoc;
+                        $("#alertModal").modal('show');
+                    }
                 }
             })
             .finally(function () {
-                $("#modalLoading").modal('hide');
+                data.filterDownloadList = [];
             });
         }
     }
@@ -747,7 +755,7 @@ var vm = new Vue({
             <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-check" style="font-size:large"></i> 선택 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="listDocDownload" :disabled="latestList.length == 0" title="리스트 다운로드" v-show="0">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="listDocDownload" :disabled="latestList.length == 0" title="리스트 다운로드" v-show="1">
                 <i class="fa-solid fa-list-ul" style="font-size:large"></i> 리스트 다운로드
             </button>
             <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드" v-show="externalRight == 'Y'">
