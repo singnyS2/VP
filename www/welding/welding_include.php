@@ -1,11 +1,13 @@
 <div class="alert alert-success text-center" v-show="!jno">
   <strong>PROJECT를 선택하세요.</strong>
 </div>
-<div class="alert border text-center" v-show="!jno">
-    <div class="mb-4 text-center p-2" style="font-weight:bold;">공사관리</div>
-    <div class="m-2">Welding, NDE, PKG 데이터 관련 문의 : 김종희 차장(☎1596)</div>
-    <div class="m-2">프로젝트 정보 및 조직도 관련 문의 : 프로젝트 PM / PE</div>
-    <div class="m-2">시스템 운영 및 에러 관련 문의 : 박시은 사원(☎1074)</div>
+<div class="alert border mt-4" v-show="!jno">
+    <div class="mb-4 p-2 text-center"><h5 style="font-weight:bold;">공사관리</h5></div>
+    <div class="chargeInfo">
+        <div class="my-2"><span><h5 style="font-weight:bold;">프로젝트 정보 및 조직도 관련 문의 : 프로젝트 PM / PE</h5></span></div>
+        <div class="my-2"><span><h5 style="font-weight:bold;">Welding, NDE, PKG 데이터 관련 문의 : 김종희 차장(☎1596)</h5></span></div>
+        <div class="my-2"><span><h5 style="font-weight:bold;">시스템 운영 및 에러 관련 문의 : 박시은 사원(☎1074)</h5></span></div>
+    </div>
 </div>
 <div id="modalLoading" class="modal modal-loading" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">

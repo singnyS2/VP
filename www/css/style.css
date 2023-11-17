@@ -839,6 +839,11 @@ ul, #myUL {
     border-spacing: 0;
 }
 
+.chargeInfo {
+    justify-content: center;
+    display: grid;
+}
+
 @media (max-width: 767px) {
     .modalMain .modal-body { 
         padding: 1rem!important; 
