@@ -57,11 +57,25 @@ if($isArchiveMultiFileToZip == true)
         //$TempFullName = $saveRemoteTempDirPath . "\\" . str_pad($jno, 5, "0",STR_PAD_LEFT) . "_VDCS_Latest_{$filesMD5ChecksumValue}.zip";
         if(isset($job_no) && $job_no)
         {
-            $TempFullName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "_VDCS_Latest_Selected_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . "_" . $job_no .".zip";
+			if( isset($post["is_search"]) && $post["is_search"] && $post["is_search"] != "N" )
+			{
+				$TempFullName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "_VDCS_Latest_Searched_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . "_" . $job_no .".zip";
+			}
+			else
+			{
+				$TempFullName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "_VDCS_Latest_Selected_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . "_" . $job_no .".zip";
+			}
         }
         else
         {
-            $TempFullName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "_VDCS_Latest_Selected_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . ".zip";
+			if( isset($post["is_search"]) && $post["is_search"] && $post["is_search"] != "N" )
+			{
+				$TempFullName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "_VDCS_Latest_Searched_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . ".zip";
+			}
+			else
+			{
+				$TempFullName = $saveRemoteTempDirPath . "\\" . date("Ymd") . "_VDCS_Latest_Selected_" . str_pad($jno, 5, "0",STR_PAD_LEFT) . ".zip";
+			}
         }
         //echo $TempFullName;
         //exit;
