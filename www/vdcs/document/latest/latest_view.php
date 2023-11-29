@@ -752,16 +752,16 @@ var vm = new Vue({
     </div>
     <div class="col-md text-right">
         <span v-show="jno">
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드" v-show="externalRight == 'Y'">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:150px;" @click="selDocDownload" :disabled="selectList.length == 0" title="선택 다운로드" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-check" style="font-size:large"></i> 선택 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="listDocDownload" :disabled="latestList.length == 0" title="리스트 다운로드" v-show="1">
-                <i class="fa-solid fa-list-ul" style="font-size:large"></i> 리스트 다운로드
-            </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드" v-show="externalRight == 'Y'">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:150px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-floppy-disk" style="font-size:large"></i> 전체 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:132px;" @click="exportLatestExcel" :disabled="latestList.length == 0" title="목록 내보내기" v-show="externalRight == 'Y'">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:150px;" @click="listDocDownload" :disabled="latestList.length == 0" title="검색 결과의 전체페이지의 파일을 다운로드합니다." v-show="1">
+                <i class="fa-solid fa-list-ul" style="font-size:large"></i> 검색 결과 다운로드
+            </button>
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:150px;" @click="exportLatestExcel" :disabled="latestList.length == 0" title="목록 내보내기" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-file-export" style="font-size:large"></i> 목록 내보내기
             </button>
         </span>
