@@ -59,7 +59,8 @@ var vm = new Vue({
         isDownError: false,
         isStaff: sessionStorage.getItem("isStaff"),
         externalRight: 'Y',
-        filterDownloadList: []
+        filterDownloadList: [],
+        isSearch: false
     },
     created() {
         // 최신문서 데이터 불러오기
@@ -114,6 +115,15 @@ var vm = new Vue({
                 }
                 searchCondition += "&sd_type=" + this.sdOption + "&sd_start_date=" + this.sd_start_date + "&sd_end_date=" + this.sd_end_date;
                 searchCondition += "&so_dc=" + this.so_dc + "&so_rc=" + this.so_rc;
+
+                var isSearch = searchCondition.replace(/&sd_type=\d/g, '');
+                isSearch = isSearch.replace(/&\w+=/g, '');
+                
+                if(!isSearch) {
+                    this.isSearch = false;
+                } else {
+                    this.isSearch = true;
+                }
 
                 var url = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&mode=latest&jno='+ jno + '&navi_page='+ this.pageNo +'&navi_offset=' + this.naviOffset + searchCondition;
                 axios.get(url).then(
@@ -551,6 +561,7 @@ var vm = new Vue({
 
                 // 다운 시작
                 data.ajaxDownload(url);
+                // location.href = url;
             });
         },
         // 쿠키 삭제
@@ -726,7 +737,7 @@ var vm = new Vue({
                     });
 
                     var selDoc = data.filterDownloadList.join(",");
-                    var url = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_LE_DOWNLOAD&jno='+ data.jno +'&doc_no=' + selDoc;
+                    var url = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_LE_DOWNLOAD&is_search=Y&jno='+ data.jno +'&doc_no=' + selDoc;
                     if(url.length <= 2083) {
                         data.axiosDownload('listDownload', url, "GET");
                     } else {
@@ -758,7 +769,7 @@ var vm = new Vue({
             <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:150px;" @click="allDocDownload" :disabled="latestList.length == 0" title="전체 다운로드" v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-floppy-disk" style="font-size:large"></i> 전체 다운로드
             </button>
-            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:150px;" @click="listDocDownload" :disabled="latestList.length == 0" title="검색 결과의 전체페이지의 파일을 다운로드합니다." v-show="1">
+            <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:150px;" @click="listDocDownload" :disabled="latestList.length == 0 || !isSearch" title="검색 결과의 전체페이지의 파일을 다운로드합니다." v-show="externalRight == 'Y'">
                 <i class="fa-solid fa-list-ul" style="font-size:large"></i> 검색 결과 다운로드
             </button>
             <button type="button" class="btn btn-outline-primary btn-sm text-left mr-2 text-center" style="width:150px;" @click="exportLatestExcel" :disabled="latestList.length == 0" title="목록 내보내기" v-show="externalRight == 'Y'">
