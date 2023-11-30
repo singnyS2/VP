@@ -560,8 +560,8 @@ var vm = new Vue({
                 var url = "/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=LATEST_ZIP_DOWNLOAD&jno=" + data.jno;
 
                 // 다운 시작
-                data.ajaxDownload(url);
-                // location.href = url;
+                // data.ajaxDownload(url);
+                location.href = url;
             });
         },
         // 쿠키 삭제
