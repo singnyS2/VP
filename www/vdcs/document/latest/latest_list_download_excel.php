@@ -164,9 +164,8 @@ if($responseResult->ResultType = "Success") {
     $rowCnt = 4;
     for($i=0; $i < count($responseResult->Value); $i++) {
     $latestData = $responseResult->Value;
-
         // 공종
-        $sheet->setCellValue('A'.$rowCnt, $latestData[$i]->doc_func_cd);
+        $sheet->setCellValue('A'.$rowCnt, $latestData[$i]->tr_func_cd);
         // 문서번호
         $sheet->setCellValue('B'.$rowCnt, $latestData[$i]->doc_num);
         // Rev.
