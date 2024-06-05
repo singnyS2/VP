@@ -901,7 +901,7 @@ var vm = new Vue({
                         <tbody>
                             <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                                 <td class="responsiveTblRow so_doc_ti" @click="docRowClick(doc.ms_no)">{{ doc.doc_title }}</td>
-                                <td class="text-center responsiveTblRow so_vn" @click="docRowClick(doc.ms_no)">{{ doc.from_comp_name }}</td>
+                                <td class="text-center responsiveTblRow so_vn" @click="docRowClick(doc.ms_no)">{{ doc.tr_from_comp_name }}</td>
                                 <td class="responsiveTblRow so_tr" @click="docRowClick(doc.ms_no)">{{ doc.tr_doc_num }}</td>
                                 <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_distribute_date_str }}</td>
                                 <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_reply_date_str }}</td>
@@ -972,7 +972,7 @@ var vm = new Vue({
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_num }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_rev_num }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_title }}</td>
-                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.from_comp_name }}</td>
+                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.tr_from_comp_name }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.tr_doc_num }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_distribute_date_str }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_reply_date_str }}</td>
