@@ -738,7 +738,7 @@ var vm = new Vue({
 
                     var selDoc = data.filterDownloadList.join(",");
                     var url = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_LE_DOWNLOAD&is_search=Y&jno='+ data.jno +'&doc_no=' + selDoc;
-                    if(url.length <= 2083) {
+                    if(url.length <= 2048) {
                         data.axiosDownload('listDownload', url, "GET");
                     } else {
                         $("#modalLoading").modal('hide');
