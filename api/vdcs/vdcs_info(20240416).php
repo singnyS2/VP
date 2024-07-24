@@ -546,13 +546,7 @@ SELECT
 	A.* 
 FROM A
 WHERE 1 = 1";
-
-if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
-{
-	//print_r($requestVdcsModelType);
-	//exit;
-}
-
+    
     switch ($requestVdcsModelType)
     {
         case RequestVdcsModelType::DocHistory :
@@ -1084,7 +1078,7 @@ A AS
 		, CD_FUNC CFT
 	WHERE 1 = 1
 		AND ( DC.JNO = TR.JNO AND DC.TR_NO = TR.TR_NO )
-		AND TR.TR_FUNC_NO = CFT.FUNC_NO(+) --(20240616 by JHP - TR의 공종이 바뀐 경우가 발생하여, TR공종 기준으로 변경) --AND DC.DOC_FUNC_NO = CFT.FUNC_NO(+)
+		AND DC.DOC_FUNC_NO = CFT.FUNC_NO(+)
 )
 SELECT A.* FROM A
 WHERE 1 = 1
@@ -1094,17 +1088,13 @@ WHERE 1 = 1
             $SQL .= " ORDER BY JNO, MS_NO, TR_NO DESC, DOC_NO DESC";
 if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
 {
-	echo $SQL;
-	exit;
+	//echo $SQL;
+	//exit;
 }
             break;
         case RequestVdcsModelType::Latest :
         default :
             $nTotalCount = 0;
-if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
-{
-	$navi_page = 1;
-}
             if($navi_page >= 0)
             {
                 //$SQL = "SELECT COUNT(*) CNT FROM V_VDCS_VPMS_LATEST WHERE IS_USE = 'Y'";
@@ -1118,8 +1108,8 @@ if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
                 
 if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
 {
-	echo $SQL_LatestWith2;
-	exit;
+	//echo $SQL;
+	//exit;
 }
                 $db->query($SQL);
                 $db->next_record();

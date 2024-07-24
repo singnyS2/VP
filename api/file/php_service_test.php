@@ -215,8 +215,14 @@ if(!$SaveName)
 {
     $SaveName = basename($FileFullName);// . "." . $ext;
 }
-/* 구 WCF 다운로드 방식
-$wsdl = 'http://file.htenc.co.kr/transferweb/Service1.svc?singleWsdl';
+
+$strErrorMessage = null;
+//$FileFullName = "eula.1028.txt";
+//echo $FileFullName;
+//exit;
+
+/* 구 WCF방식 (2024.01.04)
+$wsdl = 'http://file.hi-techeng.co.kr/transferweb/Service1.svc?singleWsdl';
 $client = new SoapClient($wsdl, array(
         'trace' => true,
         'encoding'=>'UTF-8',
@@ -224,45 +230,34 @@ $client = new SoapClient($wsdl, array(
         'cache_wsdl'=>WSDL_CACHE_NONE,
         'soap_version' => SOAP_1_1
 ));
-//$FileFullName = "eula.1028.txt";
-//echo $FileFullName;
-//exit;
+
 $retvalDownloadFileWeb = $client->DownloadFileWeb(array('strFileName' => $FileFullName));
+
 $strErrorMessage = $retvalDownloadFileWeb->DownloadFileWebResult->ErrorMessage;
 
 if(!$strErrorMessage || strlen($strErrorMessage) <= 4 || str_contains($strErrorMessage, "'System.OutOfMemoryException'"))
 {
-	$contents = null;
-	$strDownloadFullName = "G:\\" . $DownloadFileInfo["file_path"] . "\\" . $DownloadFileInfo["file_save"];
-	if(file_exists($strDownloadFullName))
-	{
-		$contents = file_get_contents($strDownloadFullName);
-	}
-	else
-	{
-		echo "File Not Found!! -- " . $strDownloadFullName;
-	}
-}
-else
-{
-	if($strErrorMessage)
-	{
-		echo $strErrorMessage;
-		exit;
-	}
 	$contents = base64_decode($retvalDownloadFileWeb->DownloadFileWebResult->FileBinary);
 }
 */
-if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
-{
-	//echo $FileFullName;
-	//exit;
-}
+/*
+$wsdl = 'http://file.hi-techeng.co.kr/transfer/Service1.svc?singleWsdl';
+$client = new SoapClient($wsdl, array(
+		'trace' => true,
+		'keep_alive' => true,
+		'connection_timeout' => 5000,
+    		'cache_wsdl' => WSDL_CACHE_NONE,
+    		'compression'   => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE, 
+	));
+$retvalDownloadFileWeb = $client->DownloadFile(array('FileName' => $FileFullName));
+$contents = $retvalDownloadFileWeb->FileByteStream;
+*/
+
 $wsdl = 'http://file.htenc.co.kr/transferweb/Service1.svc?singleWsdl';
 $client = new SoapClient($wsdl, array(
 		'trace' => true,
 		'keep_alive' => true,
-		'connection_timeout' => 80000,
+		'connection_timeout' => 5000,
     		'cache_wsdl' => WSDL_CACHE_NONE,
     		'compression'   => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE, 
 	));
@@ -270,11 +265,12 @@ try
 {
 	$retvalDownloadFileWeb = $client->DownloadFileWebStream(array('FileName' => $FileFullName));
 	//$Fun->print_r($retvalDownloadFileWeb);
+	
 	$contents = $retvalDownloadFileWeb->FileByteStream??"";
 	//$strErrorMessage = $retvalDownloadFileWeb->ErrorMessage;
 	if(isset($contents) && $contents)
 	{
-		$strErrorMessage = null;
+		
 	}
 	else
 	{
@@ -282,6 +278,7 @@ try
 		$strErrorMessage = "ERROR..............................";
 		//$Fun->print_r($retvalDownloadFileWeb);
 	}
+	
 } 
 catch(Exception $e)
 {
@@ -292,7 +289,20 @@ finally
 	//echo "finally";
 	unset($client);
 }
+if(isset($strErrorMessage) && !is_null($strErrorMessage) && $strErrorMessage)
+{
+	echo "Error Message : " . $strErrorMessage;
+	exit;
+}
 
+//$Fun->print_r($retvalDownloadFileWeb);
+//exit;
+//$strErrorMessage = $retvalDownloadFileWeb->DownloadFileWebResult->ErrorMessage;
+
+if(!$strErrorMessage || strlen($strErrorMessage) <= 4 || str_contains($strErrorMessage, "'System.OutOfMemoryException'"))
+{
+	//$contents = $retvalDownloadFileWeb->FileByteStream;
+}
 
 if(isset($contents) && $contents)
 {
@@ -419,11 +429,10 @@ if(isset($contents) && $contents)
     }
     exit;
 }
-else
+else 
 {
-	echo "";
+	echo "File Not Found!!";
 }
-
 function folderToZip($folder, &$zipFile, $subfolder = null) {
     if ($zipFile == null) {
         // no resource given, exit

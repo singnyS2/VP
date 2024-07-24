@@ -215,8 +215,8 @@ if(!$SaveName)
 {
     $SaveName = basename($FileFullName);// . "." . $ext;
 }
-/* 구 WCF 다운로드 방식
-$wsdl = 'http://file.htenc.co.kr/transferweb/Service1.svc?singleWsdl';
+
+$wsdl = 'http://file.hi-techeng.co.kr/transferweb/Service1.svc?singleWsdl';
 $client = new SoapClient($wsdl, array(
         'trace' => true,
         'encoding'=>'UTF-8',
@@ -228,8 +228,8 @@ $client = new SoapClient($wsdl, array(
 //echo $FileFullName;
 //exit;
 $retvalDownloadFileWeb = $client->DownloadFileWeb(array('strFileName' => $FileFullName));
-$strErrorMessage = $retvalDownloadFileWeb->DownloadFileWebResult->ErrorMessage;
 
+$strErrorMessage = $retvalDownloadFileWeb->DownloadFileWebResult->ErrorMessage;
 if(!$strErrorMessage || strlen($strErrorMessage) <= 4 || str_contains($strErrorMessage, "'System.OutOfMemoryException'"))
 {
 	$contents = null;
@@ -240,7 +240,7 @@ if(!$strErrorMessage || strlen($strErrorMessage) <= 4 || str_contains($strErrorM
 	}
 	else
 	{
-		echo "File Not Found!! -- " . $strDownloadFullName;
+		echo "File Not Found!! - " . $strDownloadFullName;
 	}
 }
 else
@@ -252,49 +252,8 @@ else
 	}
 	$contents = base64_decode($retvalDownloadFileWeb->DownloadFileWebResult->FileBinary);
 }
-*/
-if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
-{
-	//echo $FileFullName;
-	//exit;
-}
-$wsdl = 'http://file.htenc.co.kr/transferweb/Service1.svc?singleWsdl';
-$client = new SoapClient($wsdl, array(
-		'trace' => true,
-		'keep_alive' => true,
-		'connection_timeout' => 80000,
-    		'cache_wsdl' => WSDL_CACHE_NONE,
-    		'compression'   => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE, 
-	));
-try
-{
-	$retvalDownloadFileWeb = $client->DownloadFileWebStream(array('FileName' => $FileFullName));
-	//$Fun->print_r($retvalDownloadFileWeb);
-	$contents = $retvalDownloadFileWeb->FileByteStream??"";
-	//$strErrorMessage = $retvalDownloadFileWeb->ErrorMessage;
-	if(isset($contents) && $contents)
-	{
-		$strErrorMessage = null;
-	}
-	else
-	{
-		//$client->__getLastResponse();
-		$strErrorMessage = "ERROR..............................";
-		//$Fun->print_r($retvalDownloadFileWeb);
-	}
-} 
-catch(Exception $e)
-{
-	$strErrorMessage = $e->faultstring ?? "Exception"; 
-} 
-finally 
-{
-	//echo "finally";
-	unset($client);
-}
 
-
-if(isset($contents) && $contents)
+if($contents)
 {
     if( ($isDirect == true || $isWebView == true) && $ext != ".zip")
     {
@@ -418,10 +377,6 @@ if(isset($contents) && $contents)
         }
     }
     exit;
-}
-else
-{
-	echo "";
 }
 
 function folderToZip($folder, &$zipFile, $subfolder = null) {

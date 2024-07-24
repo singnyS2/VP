@@ -332,6 +332,5 @@ SELECT A.* FROM A WHERE ROWNUM <= 1"
         exit;
     }
 }
-//require_once __DIR__ . "/../file/wcf_service.php";
-require_once __DIR__ . "/../file/php_service.php";
+require_once __DIR__ . "/../file/wcf_service.php";
 exit;

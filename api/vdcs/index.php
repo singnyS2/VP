@@ -21,7 +21,16 @@ try
         case RequestVdcsModelType::DocLatestDownload :
         case RequestVdcsModelType::LatestZipDownload :
         case RequestVdcsModelType::LatestZipInfo :
-            require_once __DIR__ . '/vdcs_file.php';
+			if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
+			{
+				//require_once __DIR__ . '/vdcs_file_test.php';
+				require_once __DIR__ . '/vdcs_file.php';
+			}
+			else
+			{
+				require_once __DIR__ . '/vdcs_file.php';
+			}
+            
             break;
         case RequestVdcsModelType::Latest :
         case RequestVdcsModelType::DocHistory :
