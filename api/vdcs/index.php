@@ -23,8 +23,8 @@ try
         case RequestVdcsModelType::LatestZipInfo :
 			if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
 			{
-				//require_once __DIR__ . '/vdcs_file_test.php';
-				require_once __DIR__ . '/vdcs_file.php';
+				require_once __DIR__ . '/vdcs_file_test.php';
+				//require_once __DIR__ . '/vdcs_file.php';
 			}
 			else
 			{

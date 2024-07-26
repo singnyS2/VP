@@ -22,6 +22,17 @@ $docNoListStr = null;
 $DownloadFileInfo = null;
 $DownloadFileListArr = null;
 
+$phpinput_contents = file_get_contents("php://input");
+if(isset($phpinput_contents) && $phpinput_contents)
+{
+	$raw = json_decode($phpinput_contents, true);
+	if(array_key_exists('doc_no', $raw))
+	{
+		//$post = array_merge($post, $raw);
+	}
+	$post = array_merge($post, $raw);
+}
+
 if(isset($post) && is_array($post) && array_key_exists("doc_no", $post))
 {
     $doc_no = $post["doc_no"];

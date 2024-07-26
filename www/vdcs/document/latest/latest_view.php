@@ -740,15 +740,17 @@ var vm = new Vue({
                         data.filterDownloadList.push(info["doc_no"]);
                     });
 
+                    var totalCntString = data.totalCntString;
                     var url = '/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&model=DOC_LE_DOWNLOAD&is_search=Y&jno='+ data.jno
                     // if(url.length <= 2048) {
+                    if(totalCntString < 1000) {
                         data.axiosDownload('listDownload', url, "POST");
-                    // } else {
-                    //     $("#modalLoading").modal('hide');
-                    //     $("#alertModal .modal-body").html("다운받고자 하는 문서의 양이 많습니다.<br/>전체 다운로드를 사용하거나 검색조건을 더 추가하세요.");
+                    } else {
+                        $("#modalLoading").modal('hide');
+                        $("#alertModal .modal-body").html("다운받고자 하는 문서의 양이 많습니다.<br/>1000건 미만으로 검색해주세요.");
 
-                    //     $("#alertModal").modal('show');
-                    // }
+                        $("#alertModal").modal('show');
+                    }
                 }
             })
             .finally(function () {

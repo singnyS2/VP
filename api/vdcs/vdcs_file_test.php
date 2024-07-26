@@ -1,4 +1,5 @@
 <?php if(!defined("_API_INCLUDE_")) exit;
+
 require_once __DIR__ . "/../_mime_type.php";
 
 ini_set("display_errors", "On");
@@ -21,6 +22,17 @@ $docNoListStr = null;
 $DownloadFileInfo = null;
 $DownloadFileListArr = null;
 
+$phpinput_contents = file_get_contents("php://input");
+if(isset($phpinput_contents) && $phpinput_contents)
+{
+	$raw = json_decode($phpinput_contents, true);
+	if(array_key_exists('doc_no', $raw))
+	{
+		//$post = array_merge($post, $raw);
+	}
+	$post = array_merge($post, $raw);
+}
+
 if(isset($post) && is_array($post) && array_key_exists("doc_no", $post))
 {
     $doc_no = $post["doc_no"];
@@ -38,7 +50,6 @@ if(isset($post) && is_array($post) && array_key_exists("doc_no", $post))
         }
     }
 }
-
 //BEGIN SQL ==================
 /*
 $SQL_DocInfo = "SELECT BIND_JNO JNO, TR_NO
@@ -153,9 +164,6 @@ if($requestVdcsModelType == RequestVdcsModelType::DocDistributeDownload)
             "file_type" => $db->f("doc_file_type"),
         );
         //require_once __DIR__ . "/../file/wcf/wcf_service.php";
-		//$Fun->print_($SQL);
-		//$Fun->print_r($DownloadFileInfo);
-		//exit;
     }
 }
 else if($requestVdcsModelType == RequestVdcsModelType::DocReplyDownload)
@@ -186,14 +194,10 @@ else if($requestVdcsModelType == RequestVdcsModelType::DocReplyDownload)
             "file_size" => $db->f("deploy_file_size"),
             "file_type" => $db->f("deploy_file_type"),
         );
-		echo "DocReplyDownload";
-		exit;
     }
 }
 else if($requestVdcsModelType == RequestVdcsModelType::DocLatestDownload)
 {
-	echo "DocLatestDownload";
-		exit;
     if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
     {
         //$Fun->print_($SQL);
@@ -338,6 +342,6 @@ SELECT A.* FROM A WHERE ROWNUM <= 1"
         exit;
     }
 }
-require_once __DIR__ . "/../file/php_service_test.php";
 //require_once __DIR__ . "/../file/wcf_service.php";
+require_once __DIR__ . "/../file/php_service.php";
 exit;
