@@ -32,6 +32,7 @@ var vm = new Vue({
         jno : sessionStorage.getItem("jno"),
         jobName : sessionStorage.getItem("jobName"),
         selectDoc : null,
+        selectDocNo : null,
         showHistory : false,
         pageNo : 1,
         totalCnt : null,
@@ -272,16 +273,17 @@ var vm = new Vue({
             }
         },
         // 행 클릭
-        docRowClick(docNum) {
+        docRowClick(msNo, docNum) {
             // Latest 행 active
-            this.selectDoc = docNum;
+            this.selectDoc = msNo;
+            this.selectDocNo = docNum;
             // docHistory Table 활성화
             this.showHistory = true;
 
             var data = this;
             var jno = data.jno;
 
-            axios.get('/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&mode=doc_history&jno='+ jno + '&ms_no=' + docNum ).then(
+            axios.get('/api/vdcs/?api_key=d6c814548eeb6e41722806a0b057da30&api_pass=BQRUQAMXBVY=&mode=doc_history&jno='+ jno + '&ms_no=' + msNo ).then(
                 function(response) {
                     var docHistory = response["data"];
                     if(docHistory["Message"] == "Success") {
@@ -879,9 +881,9 @@ var vm = new Vue({
                     <tbody>
                         <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                             <td class="text-center"><input type="checkbox" v-model="selectList" :value="doc.doc_no" v-show="externalRight == 'Y'"/></td>
-                            <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.tr_func_cd }}</td>
-                            <td @click="docRowClick(doc.ms_no)" style="width:230px" :title="doc.doc_num" class="doc_num"><div class="text-ellipsis so_doc_no">{{ doc.doc_num }}</div></td>
-                            <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_rev_num }}</td>
+                            <td class="text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_func_cd }}</td>
+                            <td @click="docRowClick(doc.ms_no, doc.doc_num)" style="width:230px" :title="doc.doc_num" class="doc_num"><div class="text-ellipsis so_doc_no">{{ doc.doc_num }}</div></td>
+                            <td class="text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rev_num }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -905,15 +907,15 @@ var vm = new Vue({
                         </thead>
                         <tbody>
                             <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
-                                <td class="responsiveTblRow so_doc_ti" @click="docRowClick(doc.ms_no)">{{ doc.doc_title }}</td>
-                                <td class="text-center responsiveTblRow so_vn" @click="docRowClick(doc.ms_no)">{{ doc.tr_from_comp_name }}</td>
-                                <td class="responsiveTblRow so_tr" @click="docRowClick(doc.ms_no)">{{ doc.tr_doc_num }}</td>
-                                <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_distribute_date_str }}</td>
-                                <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_reply_date_str }}</td>
-                                <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'F'">{{ doc.doc_return_date_str }}</div></td>
-                                <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_num }}</td>
-                                <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_title }}</td>
-                                <td class="responsiveTblRow so_ti" @click="docRowClick(doc.ms_no)">{{ doc.doc_tag_item }}</td>
+                                <td class="responsiveTblRow so_doc_ti" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_title }}</td>
+                                <td class="text-center responsiveTblRow so_vn" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_from_comp_name }}</td>
+                                <td class="responsiveTblRow so_tr" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_doc_num }}</td>
+                                <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_distribute_date_str }}</td>
+                                <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_reply_date_str }}</td>
+                                <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no, doc.doc_num)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'F'">{{ doc.doc_return_date_str }}</div></td>
+                                <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rfq_num }}</td>
+                                <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rfq_title }}</td>
+                                <td class="responsiveTblRow so_ti" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_tag_item }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -934,8 +936,8 @@ var vm = new Vue({
                     </thead>
                     <tbody>
                         <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
-                            <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_cnt }}</td>
-                            <td class="text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_status_nick }}</td>
+                            <td class="text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_cnt }}</td>
+                            <td class="text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_status_nick }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -973,25 +975,25 @@ var vm = new Vue({
             <tbody>
                 <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                     <td class="text-center" style="white-space: nowrap;min-width: 1rem" v-show="externalRight == 'Y'"><input type="checkbox" v-model="selectList" :value="doc.doc_no"/></td>
-                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.tr_func_cd }}</td>
-                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_num }}</td>
-                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_rev_num }}</td>
-                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_title }}</td>
-                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.tr_from_comp_name }}</td>
-                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.tr_doc_num }}</td>
-                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_distribute_date_str }}</td>
-                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_reply_date_str }}</td>
-                    <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'F'">{{ doc.doc_return_date_str }}</div></td>
-                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_num }}</td>
-                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_rfq_title }}</td>
-                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no)">{{ doc.doc_tag_item }}</td>
-                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_cnt }}</td>
-                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no)">{{ doc.doc_status_nick }}</td>
+                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_func_cd }}</td>
+                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_num }}</td>
+                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rev_num }}</td>
+                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_title }}</td>
+                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_from_comp_name }}</td>
+                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_doc_num }}</td>
+                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_distribute_date_str }}</td>
+                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_reply_date_str }}</td>
+                    <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no, doc.doc_num)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'F'">{{ doc.doc_return_date_str }}</div></td>
+                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rfq_num }}</td>
+                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rfq_title }}</td>
+                    <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_tag_item }}</td>
+                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_cnt }}</td>
+                    <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_status_nick }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
-        <div class="alert alert-warning" v-show="noData">
+    <div class="alert alert-warning" v-show="noData">
         <strong>조건에 맞는 결과가 없습니다.</strong>
     </div>
     <ul class="pagination pagination-sm justify-content-center" v-html="pageList" @click="onPageNoClick($event)"></ul>
@@ -1020,7 +1022,7 @@ var vm = new Vue({
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.rowno }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.doc_rev_num }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.func_cd }}</td>
-                        <td @click="historyRowClick(history.doc_no)">{{ history.doc_num }}</td>
+                        <td @click="historyRowClick(history.doc_no)">{{ selectDocNo }}</td>
                         <td @click="historyRowClick(history.doc_no)">{{ history.tr_doc_num }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.hist_receive_date_str }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.hist_distribute_date_str }}</td>
