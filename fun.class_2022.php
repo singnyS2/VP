@@ -388,14 +388,37 @@ class Fun {
           $array = $this->convDB2Val($array);
       }
   }
-  //htmlspecialchars_decode 같은 기능이라고 해야하나???
+  /**
+	//htmlspecialchars_decode 같은 기능이라고 해야하나???
+	//Modify : 2024.08.06 by JHP - ►(&#9658;)문자가 DB에 입력시 MSSQL NTEXT 오류로 인한 강제 HTML코드 변환 기능 추가 / ►(&#9658;) - Error vs
+  ▶(&#9654;) - Success
+  */
   public function html2char( $string ){
     $string = str_replace ( "&amp;", "&", $string );
     $string = str_replace ( "&#039;", "'", $string );
     $string = str_replace ( "&quot;", '"', $string );
     $string = str_replace ( "&lt;", "<", $string );
     $string = str_replace ( "&gt;", ">", $string );
+	//필요시 활용 $string = str_replace ( "&#9654;", "▶", $string );
+	//필요시 활용 $string = str_replace ( "&#9658;", "▶", $string );
+	//필요시 활용 $string = str_replace ( "&#9658;", "►", $string );
     return $string;
+  }
+  /**
+	//htmlspecialchars와 유사 기능
+	//Create : 2024.08.06 by JHP - ►(&#9658;)문자가 DB에 입력시 MSSQL NTEXT 오류로 인한 강제 HTML코드 변환 기능 추가 / ►(&#9658;) - Error vs ▶(&#9654;) - Success
+  */
+  public function char2html( $string ){
+	$string = str_replace ( "&", "&amp;", $string );
+	$string = str_replace ( "'", "&#039;", $string );
+	$string = str_replace ( '"', "&quot;", $string );
+	$string = str_replace ( "<", "&lt;", $string );
+	$string = str_replace ( ">", "&gt;", $string );
+	//필요시 활용 $string = str_replace ( "►", "▶", $string );
+	//필요시 활용 $string = str_replace ( "►", "&#9654;", $string );
+	$string = str_replace ( "►", "&#9658;", $string );
+	//필요시 활용 $string = str_replace ( "▶", "&#9654;", $string );
+	return $string;
   }
   /**
    * 왼쪽을 지정 자리 만큼 구분자(delimiter)로 채우기

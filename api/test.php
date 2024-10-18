@@ -1,4 +1,38 @@
 <?php
+$text = "hello";
+$key = "test_key";
+$md5Key = md5($key);
+//$iv = chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0);
+$iv = str_repeat(chr(0),16);
+$encode = openssl_encrypt(rawurldecode($text), "aes-256-cbc", $md5Key, true, str_repeat(chr(0),16));
+echo "text : {$text}\n<br />key : {$key} =>  (md5) {$md5Key}";
+$encode = base64_encode($encode);
+echo "\n<br />\n<br /> ENCODE : " . $encode;
+$decode = base64_decode($encode);
+$decode = openssl_decrypt(rawurldecode($decode), "aes-256-cbc", $md5Key, true, str_repeat(chr(0),16));
+echo "\n<br />\n<br /> DECODE : " . $decode;
+exit;
+
+
+if(!defined("_LIB_INCLUDE_"))
+{
+    require_once __DIR__ . '/_inc.php';
+}
+
+$str = "►▶";
+echo $str;
+echo "<br />\n";
+echo "&#9658;&#9654;";
+echo "<br />\n";
+
+$str2 = $Fun->char2html($str);
+echo $str2;
+echo "<br />\n";
+
+$str3 = $Fun->html2char($str2);
+echo $str3;
+
+exit;
 $filename = "DF-730-04_견적서 관리대장 양식.docx";
 $url = "http://61.41.17.50:7070/api/ConvertToPdf/2ObcmzzVtTA/" . rawurlencode($filename);
 
