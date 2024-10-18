@@ -42,7 +42,7 @@ $nowDate = $today->format('Y-m-d');
 $sheet->setCellValue('A1', "JNO : " . $jno );
 $sheet->setCellValue('C1', "PROJECT : " . $jobName);
 $sheet->getStyle("A1:C1")->getFont()->setSize(12);
-$sheet->setCellValue('G1', "※ Rslt# \"R\"일 때 회람횟수 미포함");
+// $sheet->setCellValue('G1', "※ Rslt# \"R\"일 때 회람횟수 미포함");
 $sheet->getStyle("G1")->getFont()->getColor()->setRGB('974706');
 $sheet->setCellValue('J1', "※ 차기접수일이 기준일시를 지난 경우 빨간색 표시");
 $sheet->getStyle("J1")->getFont()->getColor()->setRGB('FF0000');
