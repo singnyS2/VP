@@ -5,7 +5,7 @@
     <div class="mb-4 p-2 text-center"><h5 style="font-weight:bold;">공사관리</h5></div>
     <div class="chargeInfo">
         <div class="my-2"><span><h5 style="font-weight:bold;">프로젝트 정보 및 조직도 관련 문의 : 프로젝트 PM / PE</h5></span></div>
-        <div class="my-2"><span><h5 style="font-weight:bold;">Welding, NDE, PKG 데이터 관련 문의 : 김종희 부장장(☎1596)</h5></span></div>
+        <div class="my-2"><span><h5 style="font-weight:bold;">Welding, NDE, PKG 데이터 관련 문의 : 김종희 부장(☎1596)</h5></span></div>
         <div class="my-2"><span><h5 style="font-weight:bold;">시스템 운영 및 에러 관련 문의 : 박시은 사원(☎1074)</h5></span></div>
     </div>
 </div>
