@@ -929,7 +929,7 @@ var vm = new Vue({
                             <th title="Result Code">
                                 Rslt #
                                 <div class="tooltipBox"><i class="fa-solid fa-circle-question"></i>
-                                    <span class="tooltiptext"><img class="img-thumbnail" src="../../../images/result_code_tooltip.png" /></span>
+                                    <span class="tooltiptext"><img class="img-thumbnail" src="../../../images/result_code_tooltip2.png" /></span>
                                 </div>
                             </th>
                         </tr>
