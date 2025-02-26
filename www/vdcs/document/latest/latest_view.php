@@ -821,6 +821,7 @@ var vm = new Vue({
                         </select>
                         <select class="form-control" style="width:min-content" v-model="so_rc" @change="btnSearchClick">
                             <option value="">Result#</option>
+                            <!-- //Rev. 0
                             <option value="A">A</option>
                             <option value="N">N</option>
                             <option value="RFC">RFC</option>
@@ -828,7 +829,23 @@ var vm = new Vue({
                             <option value="NN">NN</option>
                             <option value="F">F</option>
                             <option value="UN">UN</option>
-                            <option value="NULL">(NULL)</option>
+                            -->
+                            <!-- // BEGIN Rev. 1 -->
+                            <option value="1">A</option>
+                            <option value="2">AN</option>
+                            <option value="3">R</option>
+                            <option value="0">UN</option>
+                            <option value="NULL">NULL(접수)</option>
+                            <option value="">---------------</option>
+                            <option value="">* : 호환용</option>
+                            <!--
+                            <option value="4">RJT(Rejct)</option>
+                            <option value="99">NN(N/A)</option>
+                            -->
+                            <option value="4">* RJT(Reject)</option>
+                            <option value="99">* NN(N/A)</option>
+                            <!-- // END Rev. 1 -->
+                            
                         </select>
                     </div>
                 </div>
@@ -929,7 +946,7 @@ var vm = new Vue({
                             <th title="Result Code">
                                 Rslt #
                                 <div class="tooltipBox"><i class="fa-solid fa-circle-question"></i>
-                                    <span class="tooltiptext"><img class="img-thumbnail" src="../../../images/result_code_tooltip2.png" /></span>
+                                    <span class="tooltiptext"><img class="img-thumbnail" src="../../../images/result_code_tooltip_r1.png" /></span>
                                 </div>
                             </th>
                         </tr>
@@ -967,7 +984,7 @@ var vm = new Vue({
                     <th class="responsiveTblRow" title="Result Code">
                         Rslt #
                         <div class="tooltipBox"><i class="fa-solid fa-circle-question"></i>
-                            <span class="tooltiptext"><img class="img-thumbnail" src="../../../images/result_code_tooltip.png" /></span>
+                            <span class="tooltiptext"><img class="img-thumbnail" src="../../../images/result_code_tooltip_r1.png" /></span>
                         </div>
                     </th>
                 </tr>
