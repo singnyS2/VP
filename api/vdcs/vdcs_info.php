@@ -18,6 +18,32 @@ enum RequestVdcsModelType : string
  */
 //$requestVdcsModelType = RequestVdcsModelType::None;
 
+
+$RemoteAddr = $_SERVER["REMOTE_ADDR"];
+//$userAgent = "[" . $RemoteAddr . "]" . _HTTP_USER_AGENT_;
+$isDebug = false;
+
+//if($RemoteAddr == "10.10.103.221") { $isDebug = true; }
+//$debugAddrs = ["10.10.103.201"];
+$debugAddrs = ["10.10.103.201", "10.10.103.221"]; //172.16.15.254
+if(in_array($RemoteAddr, $debugAddrs)) 
+{
+    if(isset($_SERVER) && array_key_exists("HTTP_HOST", $_SERVER) && $_SERVER["HTTP_HOST"] == "vp.htenc.co.kr")
+    {
+        $isDebug = true; 
+    }
+}
+if(isset($isDebug) && $isDebug == true)
+{
+    ini_set("display_errors", "On"); //ini_set( "display_errors", 1 );
+    //error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED); 
+    //error_reporting( E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_WARNING);
+    //error_reporting(E_ALL);
+    error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+    //$isDebug = false;
+    //$Fun->print_r($post);
+}
+
 $isNaviActive = false;
 $navi_page = -1;
 $navi_offset = 20;
@@ -164,14 +190,27 @@ function GetQueryWhereStringCase($col, $val)
                 $return .= " AND UPPER(doc_func_cd) = '{$val}' ";
                 break;
             case "so_rc" :
-				if($val == "NULL")
-				{
-					$return .= " AND doc_status_nick is NULL ";
-				}
-				else
-				{
-					$return .= " AND UPPER(doc_status_nick) = '{$val}' ";
-				}
+                /*
+                if($val == "NULL")
+                {
+                        $return .= " AND doc_status_nick is NULL ";
+                }
+                else
+                {
+                        $return .= " AND UPPER(doc_status_nick) = '{$val}' ";
+                }
+                 * 
+                 */
+               if($val == "NULL")
+                {
+                        $return .= " AND doc_status_nick is NULL ";
+                }
+                else
+                {
+                    //$return .= " AND UPPER(doc_status_no) = '{$val}' ";
+                    $return .= " AND doc_result_no = '{$val}' ";
+                    //echo $return; exit;
+                }
                 break;
             case "so_all" :
                 $return .= " AND ( ";
@@ -270,7 +309,8 @@ function GetQueryWhereDateCase($col, $start_val, $end_val)
 
 try 
 {
-    
+    //사용안하는 쿼리 $SQL_LatestWith2 사용
+    /**
     $SQL_LatestWith = "WITH DC AS
 (
 SELECT DC.BIND_JNO JNO
@@ -384,6 +424,8 @@ A AS (
 	AND DC.TR_FUNC_NO = TFT.FUNC_NO(+)
 	AND DC.DOC_FUNC_NO = DFT.FUNC_NO(+)
 )";
+     *
+     */
     
     
 $SQL_LatestWith2 = "WITH DC AS
@@ -497,8 +539,8 @@ SELECT
 	--, DCG.TR_NO_AGG, DCG.DOC_NO_AGG, DCG.DOC_NUM_AGG, DCG.DOC_TITLE_AGG
 	, TFT.FUNC_CD TR_FUNC_CD, TFT.FUNC_NAME TR_FUNC_NAME
 	, DFT.FUNC_CD DOC_FUNC_CD, DFT.FUNC_NAME DOC_FUNC_NAME
-	, DRT.CODE_NAME DOC_STATUS_NAME, DRT.CODE_NAME_NICK DOC_STATUS_NICK, DRT.DESCR DOC_STATUS_DESCR
-	, DC.DOC_RESULT_NO, TRT.CODE_NAME DOC_RESULT_NAME, TRT.CODE_NAME_NICK DOC_RESULT_NICK, TRT.DESCR DOC_RESULT_DESCR
+	, DRT.RESULT_NO DOC_STATUS_NO, DRT.RESULT_NAME DOC_STATUS_NAME, DRT.RESULT_CD DOC_STATUS_NICK, DRT.RESULT_DESC DOC_STATUS_DESCR --, DRT.CODE_NAME DOC_STATUS_NAME, DRT.CODE_NAME_NICK DOC_STATUS_NICK, DRT.DESCR DOC_STATUS_DESCR
+	, DC.DOC_RESULT_NO, TRT.RESULT_NAME DOC_RESULT_NAME, TRT.RESULT_CD DOC_RESULT_NICK, TRT.RESULT_DESC DOC_RESULT_DESCR --, TRT.CODE_NAME DOC_RESULT_NAME, TRT.CODE_NAME_NICK DOC_RESULT_NICK, TRT.DESCR DOC_RESULT_DESCR
 	, DCG.FIRST_REG_DATE, DCG.LAST_MOD_DATE
 	, DC.DEFAULT_FILE_NAME, DC.ATCH_FILE_NAME, DC.ATCH_FILE_SAVE, DC.ATCH_FILE_PATH, DC.ATCH_FILE_SIZE, DC.ATCH_FILE_CHECK, DC.ATCH_FILE_TYPE, DC.ATCH_FILE_DATE, DC.ATCH_FILE_UNO, DC.ATCH_TYPE
 	, 'Y' AS IS_USE
@@ -509,14 +551,14 @@ FROM VDCS_VPMS_ENV MS
 	, TAG_GROUP TAG
 	, SYS_FUNC_TYPE TFT
 	, SYS_FUNC_TYPE DFT
-	, (SELECT * FROM SYS_DOC_RESULT_TYPE WHERE CODE_GROUP_NO = 7) DRT
-	, (SELECT * FROM SYS_DOC_RESULT_TYPE WHERE CODE_GROUP_NO = 7) TRT
+	, VDCS_REST_TYPE DRT -- (SELECT * FROM SYS_DOC_RESULT_TYPE WHERE CODE_GROUP_NO = 7) DRT
+        , VDCS_REST_TYPE TRT -- (SELECT * FROM SYS_DOC_RESULT_TYPE WHERE CODE_GROUP_NO = 7) TRT
 WHERE 1 = 1
 	AND ( MS.JNO = DCG.JNO AND MS.MS_NO = DCG.MS_NO )
 	AND ( DCG.JNO = DC.JNO AND DCG.LAST_DOC_NO = DC.DOC_NO )
 	AND ( MS.JNO = TAG.JNO(+) AND MS.MS_NO = TAG.MS_NO(+) )
-	AND DC.DOC_STATUS = DRT.CODE_CD(+)
-	AND DC.DOC_RESULT_NO = TRT.CODE_CD(+)
+	AND DC.DOC_STATUS = DRT.RESULT_NO(+) --AND DC.DOC_STATUS = DRT.CODE_CD(+)
+        AND DC.DOC_STATUS = TRT.RESULT_NO(+) --AND DC.DOC_RESULT_NO = TRT.CODE_CD(+)
 	AND DC.TR_FUNC_NO = TFT.FUNC_NO(+)
 	AND DC.DOC_FUNC_NO = DFT.FUNC_NO(+)
 ), 
@@ -530,7 +572,7 @@ A AS
         , TO_CHAR(AA.LATEST_TR_ISSUE_DATE, 'YYYY-MM-DD') DOC_DISTRIBUTE_DATE_STR
         --, AA.LATEST_TR_ACTUAL_DATE DOC_REPLY_DATE
         , DECODE(AA.DOC_RESULT_NO, NULL, NULL, AA.LATEST_TR_ACTUAL_DATE) DOC_REPLY_DATE
-        , DECODE(AA.DOC_RESULT_NO, NULL, NULL, TO_CHAR(AA.LATEST_TR_ACTUAL_DATE, 'YYYY-MM-DD') ) DOC_REPLY_DATE_STR
+        , DECODE(AA.DOC_RESULT_NO, NULL, NULL, 100, NULL, TO_CHAR(AA.LATEST_TR_ACTUAL_DATE, 'YYYY-MM-DD') ) DOC_REPLY_DATE_STR
         , DECODE(AA.DOC_RESULT_NO, NULL, NULL, AA.LATEST_TR_RETURN_DATE) DOC_RETURN_DATE
         , DECODE(AA.DOC_RESULT_NO, NULL, NULL, TO_CHAR(AA.LATEST_TR_RETURN_DATE, 'YYYY-MM-DD') ) DOC_RETURN_DATE_STR
         , TRUNC(SYSDATE) TO_DAY_DATE
@@ -1141,10 +1183,9 @@ if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
     if(!isset($SQL)) exit;
     
     
-if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.221")
+if(isset($_SERVER) && $_SERVER["REMOTE_ADDR"] == "10.10.103.201")
 {
-	//echo $SQL;
-	//exit;
+	//echo $SQL; exit;
 }
             
     if($isNaviActive == true && $iStartRow >= 0 && $nLimitCount > 0)
