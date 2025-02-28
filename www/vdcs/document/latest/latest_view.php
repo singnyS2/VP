@@ -833,8 +833,9 @@ var vm = new Vue({
                             <!-- // BEGIN Rev. 1 -->
                             <option value="1">A</option>
                             <option value="2">AN</option>
-                            <option value="3">R</option>
+                            <option value="3">R</option>ㅗ
                             <option value="0">UN</option>
+                            <option value="100">F</option>
                             <option value="NULL">NULL(접수)</option>
                             <option value="">---------------</option>
                             <option value="">* : 호환용</option>
@@ -896,7 +897,7 @@ var vm = new Vue({
                         </tr>
                     </thead>
                     <tbody>
-                        <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'FNL'), 'resultNull' : (doc.doc_status_nick == '')}">
+                        <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                             <td class="text-center"><input type="checkbox" v-model="selectList" :value="doc.doc_no" v-show="externalRight == 'Y'"/></td>
                             <td class="text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_func_cd }}</td>
                             <td @click="docRowClick(doc.ms_no, doc.doc_num)" style="width:230px" :title="doc.doc_num" class="doc_num"><div class="text-ellipsis so_doc_no">{{ doc.doc_num }}</div></td>
@@ -923,13 +924,13 @@ var vm = new Vue({
                             </tr>
                         </thead>
                         <tbody>
-                            <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'FNL'), 'resultNull' : (doc.doc_status_nick == '')}">
+                            <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                                 <td class="responsiveTblRow so_doc_ti" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_title }}</td>
                                 <td class="text-center responsiveTblRow so_vn" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.from_comp_name }}</td>
                                 <td class="responsiveTblRow so_tr" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_doc_num }}</td>
                                 <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_distribute_date_str }}</td>
                                 <td class="text-center responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_reply_date_str }}</td>
-                                <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no, doc.doc_num)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'FNL'">{{ doc.doc_return_date_str }}</div></td>
+                                <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no, doc.doc_num)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'F'">{{ doc.doc_return_date_str }}</div></td>
                                 <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rfq_num }}</td>
                                 <td class="responsiveTblRow so_rt" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rfq_title }}</td>
                                 <td class="responsiveTblRow so_ti" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_tag_item }}</td>
@@ -952,7 +953,7 @@ var vm = new Vue({
                         </tr>
                     </thead>
                     <tbody>
-                        <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'FNL'), 'resultNull' : (doc.doc_status_nick == '')}">
+                        <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                             <td class="text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_cnt }}</td>
                             <td class="text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_status_nick }}</td>
                         </tr>
@@ -990,7 +991,7 @@ var vm = new Vue({
                 </tr>
             </thead>
             <tbody>
-                <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'FNL'), 'resultNull' : (doc.doc_status_nick == '')}">
+                <tr :key="doc.ms_no" v-for="doc in latestList" :class="{'rowActive' : (doc.ms_no == selectDoc), 'resultFinal' : (doc.doc_status_nick == 'F'), 'resultNull' : (doc.doc_status_nick == '')}">
                     <td class="text-center" style="white-space: nowrap;min-width: 1rem" v-show="externalRight == 'Y'"><input type="checkbox" v-model="selectList" :value="doc.doc_no"/></td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_func_cd }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_num }}</td>
@@ -1000,7 +1001,7 @@ var vm = new Vue({
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.tr_doc_num }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_distribute_date_str }}</td>
                     <td class="responsiveTblRow text-center" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_reply_date_str }}</td>
-                    <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no, doc.doc_num)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'FNL'">{{ doc.doc_return_date_str }}</div></td>
+                    <td :class="['text-center', 'responsiveTblRow', {'beforeToday' : new Date(doc.doc_return_date_str) < new Date(doc.to_day_date_str)}]" @click="docRowClick(doc.ms_no, doc.doc_num)"><div v-show="doc.doc_status_nick != 'A' && doc.doc_status_nick != 'F'">{{ doc.doc_return_date_str }}</div></td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rfq_num }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_rfq_title }}</td>
                     <td class="responsiveTblRow" @click="docRowClick(doc.ms_no, doc.doc_num)">{{ doc.doc_tag_item }}</td>
@@ -1034,7 +1035,7 @@ var vm = new Vue({
                     </tr>
                 </thead>
                 <tbody>
-                    <tr :key="history.doc_no" v-for="history in docHistory" :class="{'rowActive' : (history.doc_no == selectHistory), 'resultFinal' : (history.doc_status_nick == 'FNL'), 'resultNull' : (history.doc_status_nick == '')}">
+                    <tr :key="history.doc_no" v-for="history in docHistory" :class="{'rowActive' : (history.doc_no == selectHistory), 'resultFinal' : (history.doc_status_nick == 'F'), 'resultNull' : (history.doc_status_nick == '')}">
                         <!-- <td><input type="checkbox" /></td> -->
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.rowno }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.doc_rev_num }}</td>
@@ -1046,7 +1047,7 @@ var vm = new Vue({
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.hist_reply_date_str }}</td>
                         <td class="text-center" @click="historyRowClick(history.doc_no)">{{ history.doc_status_nick }}</td>
                         <td class="text-center"><span class="downloadImg" @click="distributeDownload(history.doc_no)" title="배포문서 다운로드"><img src="../../../images/preview.png" v-show="externalRight == 'Y'"/></span></td>
-                        <td class="text-center"><span class="downloadImg" v-show="history.doc_status && history.doc_status_nick != 'FNL' && externalRight == 'Y'" @click="IssueDownload(history.doc_no)" title="회신문서 다운로드"><img src="../../../images/outlook.png"/></span></td>
+                        <td class="text-center"><span class="downloadImg" v-show="history.doc_status && history.doc_status_nick != 'F' && externalRight == 'Y'" @click="IssueDownload(history.doc_no)" title="회신문서 다운로드"><img src="../../../images/outlook.png"/></span></td>
                     </tr>
                 </tbody>
             </table>

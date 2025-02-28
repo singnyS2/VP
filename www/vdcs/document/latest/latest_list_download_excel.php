@@ -188,7 +188,7 @@ if($responseResult->ResultType = "Success") {
         }
         // 차기 접수일
         $resultCode = $latestData[$i]->doc_status_nick;
-        if($resultCode != "A" && $resultCode != "FNL") {
+        if($resultCode != "A" && $resultCode != "F") {
             $sheet->setCellValue('J'.$rowCnt, $latestData[$i]->doc_return_date_str);
             if($latestData[$i]->doc_return_date_str) {
                 $returnDate = $latestData[$i]->doc_return_date_str;
@@ -243,7 +243,7 @@ if($responseResult->ResultType = "Success") {
         }
 
         // final 서식
-        if($latestData[$i]->doc_status_nick == "FNL") {
+        if($latestData[$i]->doc_status_nick == "F") {
             $sheet->getStyle("A{$rowCnt}:N{$rowCnt}")->applyFromArray($final_style_array);
         }
         // 하이퍼 링크
