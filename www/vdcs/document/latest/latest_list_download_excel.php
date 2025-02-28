@@ -180,11 +180,15 @@ if($responseResult->ResultType = "Success") {
         $sheet->setCellValue('G'.$rowCnt, $latestData[$i]->doc_status_nick);
         // 회람일
         $sheet->setCellValue('H'.$rowCnt, $latestData[$i]->doc_distribute_date_str);
-        $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_DE_DOWNLOAD");
+        if($jno != 16601) {
+            $sheet->getCell('H'.$rowCnt)->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_DE_DOWNLOAD");
+        }
         // 회신일
         $sheet->setCellValue('I'.$rowCnt, $latestData[$i]->doc_reply_date_str);
         if($latestData[$i]->doc_reply_date_str) {
-            $sheet->getCell('I'.$rowCnt)->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_LE_DOWNLOAD");
+            if($jno != 16601) {
+                $sheet->getCell('I'.$rowCnt)->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$latestData[$i]->doc_no}&pdfPage=1&model=DOC_LE_DOWNLOAD");
+            }
         }
         // 차기 접수일
         $resultCode = $latestData[$i]->doc_status_nick;
@@ -220,7 +224,9 @@ if($responseResult->ResultType = "Success") {
             $col++;
             // 회람일
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_distribute_date_str"]);
-            $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_DE_DOWNLOAD");
+            if($jno != 16601) {
+                $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_DE_DOWNLOAD");
+            }
             if($col == "P") {
                 $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
             }
@@ -231,7 +237,9 @@ if($responseResult->ResultType = "Success") {
             // 회신일
             $sheet->setCellValue("{$col}{$rowCnt}", $value["hist_reply_date_str"]);
             if($value["hist_reply_date_str"]) {
-                $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_LE_DOWNLOAD");
+                if($jno != 16601) {
+                    $sheet->getCell("{$col}{$rowCnt}")->getHyperlink()->setUrl("https://vp.htenc.co.kr/pdfViewer.php?jno={$jno}&doc_no={$value['doc_no']}&pdfPage=1&model=DOC_LE_DOWNLOAD");
+                }
                 if($col == "Q") {
                     $sheet->getStyle("{$col}{$rowCnt}")->applyFromArray($link_style_array);
                 }
