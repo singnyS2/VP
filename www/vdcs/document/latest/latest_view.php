@@ -502,30 +502,61 @@ var vm = new Vue({
                             });
                         });
 
-                        let tempArray = [];
+                        // let tempArray = [];
+                        // let maxSeq = 0;
+
+                        // $.each(msList, function(j, ms_no) {
+                        //     tempArray = [];
+                        //     $.each(historyList, function(i, info) {
+                        //         if(ms_no == info["ms_no"]) {
+                        //             tempArray.push({
+                        //                 hist_distribute_date_str: info["hist_distribute_date_str"],
+                        //                 hist_reply_date_str: info["hist_reply_date_str"],
+                        //                 doc_no: info["doc_no"],
+                        //                 doc_status_nick: info["doc_status_nick"]
+                        //             });
+                        //         }
+                        //     });
+                        //     // tempArray = tempArray.reverse();
+                        //     data.historyDateList[ms_no] = tempArray;
+                        //     // 최대 차수
+                        //     var seq = data.historyDateList[ms_no].length;
+                        //     if(maxSeq < seq) {
+                        //         maxSeq = seq;
+                        //     }
+                        // });
+                        // data.maxSeq = maxSeq;
+
+                        // historyList를 ms_no 기준으로 그룹화
+                        let historyMap = new Map();
+                        historyList.forEach(info => {
+                            if (!historyMap.has(info.ms_no)) {
+                                historyMap.set(info.ms_no, []);
+                            }
+                            historyMap.get(info.ms_no).push({
+                                hist_distribute_date_str: info.hist_distribute_date_str,
+                                hist_reply_date_str: info.hist_reply_date_str,
+                                doc_no: info.doc_no,
+                                doc_status_nick: info.doc_status_nick
+                            });
+                        });
+
                         let maxSeq = 0;
 
-                        $.each(msList, function(j, ms_no) {
-                            tempArray = [];
-                            $.each(historyList, function(i, info) {
-                                if(ms_no == info["ms_no"]) {
-                                    tempArray.push({
-                                        hist_distribute_date_str: info["hist_distribute_date_str"],
-                                        hist_reply_date_str: info["hist_reply_date_str"],
-                                        doc_no: info["doc_no"],
-                                        doc_status_nick: info["doc_status_nick"]
-                                    });
-                                }
-                            });
-                            // tempArray = tempArray.reverse();
+                        // msList 순회하면서 빠르게 데이터 매핑 및 maxSeq 계산
+                        msList.forEach(ms_no => {
+                            let tempArray = historyMap.get(ms_no) || [];
                             data.historyDateList[ms_no] = tempArray;
-                            // 최대 차수
-                            var seq = data.historyDateList[ms_no].length;
-                            if(maxSeq < seq) {
+                            
+                            // 최대 차수 계산
+                            let seq = tempArray.length;
+                            if (maxSeq < seq) {
                                 maxSeq = seq;
                             }
                         });
+
                         data.maxSeq = maxSeq;
+                        
                         // 다운로드 시작
                         var url = '/vdcs/document/latest/latest_list_download_excel.php';
                         data.axiosDownload("excelDown" ,url, "POST");
